@@ -1,6 +1,7 @@
 package com.generation.blogpessoal.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -61,21 +62,25 @@ public class PostagemController {
 		  VALEUS (?, ?, ?)*/
 		
 	}
-	@PutMapping
-	public ResponseEntity<Postagem> put(@Valid @RequestBody Postagem postagem){
-		return ResponseEntity.status(HttpStatus.OK)
-				.body(postagemRepository. save(postagem));
-		/*.map(resposta -> ResponseEntity.ok(resposta))
-		.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build())
+	@PutMapping("/{id}")
+	public void put(@PathVariable Long id, @RequestBody Postagem postagem){
+		Optional<Postagem> post = postagemRepository.findById(id);
+			if(post.isEmpty())
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+			ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
 		
 		/*UPDATE tb_postagens SET titulo = ?, texto = ?, data = ?
 		 * WHERE id = id */
 	}
 	
-	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
-		postagemRepository.deleteById(id);
+	public ResponseEntity<?> deleteById(@PathVariable Long id) {
+		return postagemRepository.findById(id)
+				.map(resposta -> {	
+					postagemRepository.deleteById(id);
+					return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+				})
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
 		/*if(postagem.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND);*/
 		/*DELETE FROM tb_postagens WHERE id = id*/
 	}
