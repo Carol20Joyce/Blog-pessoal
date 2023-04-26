@@ -25,6 +25,8 @@ public class Tema {
 	@NotNull(message = "O Atributo Descrição é obrigatório")
 	private String descricao;
 	
+	/*Relacionamento*/
+	
 	@OneToMany(fetch = FetchType.LAZY, mappedBy = "tema", cascade = CascadeType.REMOVE)
 	@JsonIgnoreProperties("tema")
 	private List<Postagem> postagem;
