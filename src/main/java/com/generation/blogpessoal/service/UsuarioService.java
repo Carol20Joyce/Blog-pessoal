@@ -40,7 +40,7 @@ public class UsuarioService {
 	
 	public Optional<Usuario> atualizarUsuario(Usuario usuario){
 		
-		if(usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent()) {
+		if(usuarioRepository.findById(usuario.getId()).isPresent()) {
 			
 			Optional<Usuario> buscaUsuario = usuarioRepository.findByUsuario(usuario.getUsuario());
 			
